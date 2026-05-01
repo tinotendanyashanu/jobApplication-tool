@@ -54,18 +54,19 @@ app = FastAPI(
     lifespan=_lifespan,
 )
 
+# Browsers send OPTIONS preflight when custom headers are used (e.g. GET + X-User-Id). If Origin is not
+# in allow_origins, Starlette replies 400 Bad Request ("Disallowed CORS origin"). Next/Vercel rewrites
+# forward that Origin to the API. Default allow all origins; set CORS_ORIGINS to a comma list to lock
+# down. allow_credentials=False allows wildcard origins; API auth is X-User-Id, not cookies.
 _origins_env = (os.getenv("CORS_ORIGINS") or "").strip()
-_origins_default = ["http://localhost:3000", "http://127.0.0.1:3000"]
-_allow_origins = (
-    [o.strip() for o in _origins_env.split(",") if o.strip()]
-    if _origins_env
-    else _origins_default
+_allow_origins: list[str] = (
+    [o.strip() for o in _origins_env.split(",") if o.strip()] if _origins_env else ["*"]
 )
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_allow_origins,
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
