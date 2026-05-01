@@ -1,0 +1,25 @@
+Backend Engineer — Payments Team
+ExamplePay (Warsaw / hybrid)
+
+About the role
+We are looking for a backend engineer to help build reliable payment and settlement services. You will work with product and compliance to ship APIs that process high volumes safely.
+
+What you will do
+- Design and implement Python services (FastAPI) and integrations with PostgreSQL
+- Improve performance and reliability (caching with Redis, observability)
+- Collaborate in code reviews; mentor junior engineers when needed
+
+Requirements
+- 3+ years professional Python experience
+- Strong SQL and data modeling skills
+- Experience with message queues or background workers
+- Professional English (B2+); Polish is a plus
+
+Nice to have
+- Experience in fintech or regulated environments
+- AWS or containerized deployments
+
+What we offer
+- Hybrid work, flexible hours, learning budget
+
+Apply with CV and short cover letter describing a time you improved API latency or reliability.

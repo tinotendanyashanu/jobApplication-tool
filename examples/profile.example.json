@@ -1,0 +1,71 @@
+{
+  "full_name": "Jan Kowalski",
+  "email": "jan.kowalski@example.com",
+  "phone": "+48 600 000 000",
+  "location": "Warsaw, Poland",
+  "links": [
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/example" },
+    { "label": "GitHub", "url": "https://github.com/example" }
+  ],
+  "summary": "Backend engineer with 4 years building APIs and data services in Python. Interested in product-minded teams and clean system design.",
+  "experience": [
+    {
+      "title": "Software Engineer",
+      "company": "Example SaaS Sp. z o.o.",
+      "location": "Warsaw (hybrid)",
+      "start": "2022-03",
+      "end": "present",
+      "highlights": [
+        "Designed and shipped REST APIs used by 50k weekly active users; reduced p95 latency by 28% after query and caching improvements.",
+        "Led migration of a monolithic reporting module to async workers (Celery + Redis), improving reliability during peak load.",
+        "Mentored two junior developers through code reviews and pair programming on testing practices."
+      ]
+    },
+    {
+      "title": "Junior Developer",
+      "company": "LocalShop",
+      "location": "Kraków",
+      "start": "2020-06",
+      "end": "2022-02",
+      "highlights": [
+        "Built internal admin tools in Django and PostgreSQL; added automated backup verification scripts."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "B.Sc. Computer Science",
+      "institution": "Example University",
+      "year": "2020"
+    }
+  ],
+  "skills": [
+    "Python",
+    "FastAPI",
+    "PostgreSQL",
+    "Redis",
+    "Docker",
+    "Git",
+    "AWS basics",
+    { "name": "Polish", "level": "native" },
+    { "name": "English", "level": "C1" }
+  ],
+  "projects": [
+    {
+      "name": "OpenSource CLI Toolkit",
+      "description": "Small Python CLI for parsing résumé JSON and linting section headings; 120+ GitHub stars.",
+      "tech": ["Python", "Typer", "Pydantic"],
+      "url": "https://github.com/example/resume-lint"
+    }
+  ],
+  "languages": [
+    { "language": "Polish", "proficiency": "Native" },
+    { "language": "English", "proficiency": "C1" }
+  ],
+  "preferences": {
+    "target_roles": ["Backend Engineer", "API Engineer"],
+    "industries": ["B2B SaaS", "Fintech"],
+    "salary_expectation": "",
+    "availability": "4 weeks notice"
+  }
+}

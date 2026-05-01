@@ -1,0 +1,10 @@
+# Backend service: deploy this repo root on Railway (Dockerfile build).
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# Runs after image build; applies supabase/migrations/*.sql via scripts/railway-migrate.sh
+preDeployCommand = "/bin/sh /app/scripts/railway-migrate.sh"
+healthcheckPath = "/health"
+healthcheckTimeout = 300

@@ -1,0 +1,20 @@
+{
+  "match_score": 58,
+  "skill_match_score": 72,
+  "experience_match_score": 48,
+  "keyword_match_score": 41,
+  "strengths": [
+    "Production Python + FastAPI experience aligns with backend stack priorities.",
+    "PostgreSQL migrations and throughput improvements map to JD performance asks.",
+    "Mentorship examples echo the team's junior coaching expectation."
+  ],
+  "gaps": [
+    "No explicit regulated fintech background while the JD highlights compliance-adjacent work.",
+    "Keyword coverage for dedicated message-queue ownership is thinner than requested."
+  ],
+  "recommendations": [
+    "Surface one example of high-volume money movement or reconciliation if available—without inventing details.",
+    "Call out async worker experience with concrete metrics to echo reliability expectations.",
+    "Keep CV skills ordered to mirror required stack (Python, FastAPI, PostgreSQL, Redis) for ATS alignment."
+  ]
+}

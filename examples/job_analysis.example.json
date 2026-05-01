@@ -1,0 +1,31 @@
+{
+  "job_title": "Backend Engineer — Payments Team",
+  "company_name": "ExamplePay",
+  "required_skills": [
+    "Python",
+    "FastAPI",
+    "PostgreSQL",
+    "Redis",
+    "Distributed systems",
+    "English (B2+)"
+  ],
+  "nice_to_have_skills": [
+    "AWS",
+    "Fintech experience",
+    "Celery"
+  ],
+  "keywords": [
+    "REST API",
+    "latency",
+    "observability",
+    "mentoring",
+    "compliance"
+  ],
+  "experience_level": "mid",
+  "language_requirements": [
+    "English B2+",
+    "Polish nice to have"
+  ],
+  "location": "Warsaw / hybrid",
+  "summary": "ExamplePay seeks a backend engineer to build reliable payment and settlement services in Python, improve performance with Redis, and mentor junior engineers in a hybrid Warsaw setup."
+}

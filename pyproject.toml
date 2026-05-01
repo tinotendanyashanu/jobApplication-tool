@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jobassistant"
+version = "0.1.0"
+description = "Phase 1 MVP: AI-powered tailored CV and cover letter from profile + job description"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi==0.136.1",
+    "uvicorn[standard]==0.46.0",
+    "openai==2.33.0",
+    "pydantic>=2.9,<3",
+    "pydantic-settings==2.14.0",
+    "python-dotenv==1.2.2",
+    "psycopg[binary]>=3.2,<4",
+    "psycopg-pool>=3.2,<4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+jobassistant = "jobassistant.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+jobassistant = ["prompts/*.md"]

@@ -1,0 +1,66 @@
+{
+  "sample_request": {
+    "profile": {
+      "full_name": "Avery Chen",
+      "summary": "Backend engineer focusing on Postgres and FastAPI services.",
+      "skills": ["Python", "PostgreSQL", "Docker", "FastAPI"],
+      "experience": [
+        {
+          "title": "Senior Software Engineer",
+          "company": "Northwind Labs",
+          "start": "2021-03",
+          "end": "present",
+          "highlights": ["Shipped async billing pipeline", "Cut p95 API latency 38%"]
+        }
+      ]
+    },
+    "job_analysis": {
+      "job_title": "Senior Backend Engineer",
+      "company_name": "Contoso",
+      "required_skills": ["Python", "PostgreSQL", "Kubernetes", "gRPC"],
+      "nice_to_have_skills": ["Temporal", "Rust"],
+      "keywords": ["distributed systems", "observability", "SRE"],
+      "experience_level": "senior",
+      "summary": "Own API platform work for payments."
+    },
+    "match_scores": {
+      "match_score": 78,
+      "skill_match": 74,
+      "experience_match": 82,
+      "keyword_match": 69
+    },
+    "strengths": [
+      "Strong overlap on Python + Postgres with production scale stories."
+    ],
+    "gaps": [
+      "Kubernetes production depth not evidenced in profile text."
+    ],
+    "application": {
+      "listing_posted_at": "2026-04-28T09:00:00Z",
+      "applied_at": "2026-04-29T14:30:00Z"
+    }
+  },
+  "sample_response": {
+    "response_probability": 71,
+    "confidence_level": "high",
+    "factors": {
+      "skill_match": 74,
+      "experience_match": 82,
+      "keyword_match": 69,
+      "job_freshness": 95,
+      "competition_level": 66
+    },
+    "insights": [
+      "Strongest documented fits echo: Strong overlap on Python + Postgres with production scale stories.",
+      "Seniority band appears aligned with the posting language.",
+      "Skill overlap is a credible strength for first-pass filters.",
+      "Listing looks fresh — response cycles are often faster while hiring is active."
+    ],
+    "recommendations": [
+      "Keep a short cover letter hook that maps your top strength to the company's stated pain.",
+      "Reuse the JD's verbs in accomplishment bullets tied to measurable outcomes.",
+      "Send applications within ~3 days of posting when possible to ride early pipeline effects."
+    ],
+    "methodology_note": "Rule-based MVP: calibrated blend of overlap scores, freshness, timing, and coarse competition heuristics. Not a calibrated probability model."
+  }
+}
