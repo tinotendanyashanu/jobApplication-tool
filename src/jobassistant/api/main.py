@@ -36,6 +36,8 @@ from jobassistant.services.output import write_text_outputs
 from jobassistant.db.pool import close_pool, init_pool
 from jobassistant.api.applications_router import router as applications_router
 from jobassistant.api.prediction_router import router as prediction_router
+from jobassistant.api.scraper_router import router as scraper_router
+from jobassistant.api.autofill_router import router as autofill_router
 
 
 @asynccontextmanager
@@ -74,6 +76,8 @@ app.add_middleware(
 
 app.include_router(applications_router)
 app.include_router(prediction_router)
+app.include_router(scraper_router)
+app.include_router(autofill_router)
 
 
 @app.post("/analyze-job", response_model=AnalyzeJobResponse)

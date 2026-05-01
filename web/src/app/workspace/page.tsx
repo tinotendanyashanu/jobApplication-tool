@@ -7,17 +7,20 @@ import { ProfileForm } from "@/components/profile-form";
 import { JobInput } from "@/components/job-input";
 import { ActionButtons } from "@/components/action-buttons";
 import { OutputTabs } from "@/components/output-tabs";
+import { AutofillPanel } from "@/components/autofill-panel";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { generateCoverLetter, generateCv } from "@/lib/api";
+import { fetchAutofillFields } from "@/lib/api-scraper";
 import { predictResponse } from "@/lib/api-prediction";
 import { createApplication } from "@/lib/api-applications";
 import { sanitizeProfile } from "@/lib/sanitize-profile";
 import { defaultProfile } from "@/lib/defaults";
 import { getOrCreateUserId } from "@/lib/user-id";
 import type { GenerateMeta, LocaleCode, UserProfile } from "@/types/profile";
+import type { AutofillResponse } from "@/types/scrape";
 
 export default function WorkspacePage() {
   const [profile, setProfile] = useState<UserProfile>(() => defaultProfile());
@@ -32,6 +35,8 @@ export default function WorkspacePage() {
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [lastMeta, setLastMeta] = useState<GenerateMeta | null>(null);
   const [savingTracker, setSavingTracker] = useState(false);
+  const [autofillData, setAutofillData] = useState<AutofillResponse | null>(null);
+  const [loadingAutofill, setLoadingAutofill] = useState(false);
 
   const formReady = useMemo(() => {
     const jd = jobDescription.trim();
@@ -181,6 +186,24 @@ export default function WorkspacePage() {
     }
   }
 
+  async function handleRequestAutofill() {
+    setLoadingAutofill(true);
+    try {
+      const analysis = lastMeta?.job_analysis ?? null;
+      const result = await fetchAutofillFields({
+        profile: sanitizeProfile(profile),
+        job_analysis: analysis,
+        cv_text: cvText,
+        cover_letter_text: letterText,
+      });
+      setAutofillData(result);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not build autofill data.");
+    } finally {
+      setLoadingAutofill(false);
+    }
+  }
+
   return (
     <main className="relative flex flex-1 flex-col bg-muted/35">
       <div className="pointer-events-none absolute inset-x-0 top-[-28%] isolate -z-10 h-[560px] overflow-hidden blur-3xl">
@@ -241,6 +264,11 @@ export default function WorkspacePage() {
               onJobDescriptionChange={setJobDescription}
               onJobLinkChange={setJobLink}
               onLocaleChange={setLocale}
+              onScrapeResult={(result) => {
+                if (result.job_title || result.company_name) {
+                  // Surface scraped metadata into error hint if useful
+                }
+              }}
             />
             {formReady.hint ? (
               <p className="text-sm text-muted-foreground">{formReady.hint}</p>
@@ -286,6 +314,12 @@ export default function WorkspacePage() {
                 </p>
               )}
             </div>
+            <AutofillPanel
+              data={autofillData}
+              loading={loadingAutofill}
+              canRequest={Boolean(cvText?.trim()) && Boolean(letterText?.trim())}
+              onRequest={() => void handleRequestAutofill()}
+            />
             <Link
               href="/"
               className="inline-flex text-[0.8rem] font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
