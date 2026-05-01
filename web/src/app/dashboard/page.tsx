@@ -174,7 +174,7 @@ export default function DashboardPage() {
 
         {error ? (
           <Alert variant="destructive" className="animate-in fade-in-0">
-            <AlertTitle>Tracker blocked</AlertTitle>
+            <AlertTitle>Could not sync tracker</AlertTitle>
             <AlertDescription className="whitespace-pre-wrap">{error}</AlertDescription>
           </Alert>
         ) : null}

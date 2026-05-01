@@ -16,7 +16,19 @@ export async function readError(res: Response): Promise<string> {
         .join("; ");
     }
   }
-  return (await res.text()) || `${res.status} ${res.statusText}`;
+  const text = (await res.text()) || `${res.status} ${res.statusText}`;
+  const trimmed = text.trimStart();
+  if (
+    trimmed.startsWith("<!DOCTYPE") ||
+    trimmed.toLowerCase().startsWith("<html")
+  ) {
+    return (
+      `Got an HTML ${res.status} page instead of the API — NEXT_PUBLIC_API_URL may point at this Next app ` +
+      `instead of FastAPI. Remove it to use the /api/proxy rewrite, or set NEXT_PUBLIC_API_URL to your FastAPI ` +
+      `origin (e.g. http://127.0.0.1:8000). Ensure the API server is running.`
+    );
+  }
+  return text;
 }
 
 export async function postJson<T>(path: string, payload: unknown): Promise<T> {
