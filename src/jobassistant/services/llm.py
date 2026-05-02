@@ -73,7 +73,4 @@ class OpenAIClient:
             temperature=temperature,
             max_tokens=max_tokens,
             response_format={"type": "json_object"},
-            # Disable thinking for JSON calls — thinking tokens consume output budget
-            # and cause truncation before the JSON is complete.
-            extra_body={"google": {"thinking_config": {"thinking_budget": 0}}},
         )

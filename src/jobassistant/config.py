@@ -17,7 +17,7 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("GOOGLE_AI_API_KEY", "google_ai_api_key"),
     )
     google_ai_model: str = Field(
-        default="gemini-2.0-flash",
+        default="gemini-2.5-flash-lite",
         validation_alias=AliasChoices(
             "GOOGLE_AI_MODEL",
             "GEMINI_MODEL",
