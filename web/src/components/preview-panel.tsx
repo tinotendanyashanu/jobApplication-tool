@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Copy, Download, FileText } from "lucide-react";
+import { Copy, Download, FileText, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +11,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { parseMarkdownCV } from "@/lib/parse-cv";
+import { CvTemplateViewer, TemplateType } from "./cv-templates";
+import { cn } from "@/lib/utils";
 
 export type PreviewPanelProps = {
   title: string;
@@ -19,6 +22,8 @@ export type PreviewPanelProps = {
   loading?: boolean;
   emptyFallback: string;
   fileStem: string;
+  onApply?: () => void;
+  applying?: boolean;
 };
 
 export function PreviewPanel({
@@ -28,12 +33,15 @@ export function PreviewPanel({
   loading,
   emptyFallback,
   fileStem,
+  onApply,
+  applying,
 }: PreviewPanelProps) {
   const [copying, setCopying] = useState(false);
+  const [template, setTemplate] = useState<TemplateType>("modern");
 
   const hasContent = Boolean((body ?? "").trim());
-
   const safeBody = body?.trim() || "";
+  const parsedData = useMemo(() => parseMarkdownCV(safeBody), [safeBody]);
 
   const filenameBase = useMemo(() => sanitizeFilename(fileStem), [fileStem]);
 
@@ -61,56 +69,90 @@ export function PreviewPanel({
   }
 
   return (
-    <Card className="flex h-[640px] max-h-[70vh] flex-col border-none bg-muted/15 shadow-inner">
+    <Card className="flex h-[750px] max-h-[85vh] flex-col border-none bg-muted/15 shadow-inner">
       <CardHeader className="sr-only">
         <CardTitle>{title}</CardTitle>
         {subtitle ? <CardDescription>{subtitle}</CardDescription> : null}
       </CardHeader>
-      <CardContent className="flex min-h-0 flex-1 flex-col gap-3 p-0">
-        <div className="flex flex-wrap gap-2 border-b border-border/60 px-6 py-4">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            disabled={!hasContent || loading || copying}
-            onClick={() => void copyToClipboard(safeBody)}
-          >
-            <Copy />
-            {copying ? "Copying…" : "Copy"}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            disabled={!hasContent || loading}
-            onClick={() => downloadText(safeBody)}
-          >
-            <Download />
-            .txt
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            disabled={!hasContent || loading}
-            onClick={handlePdfImport}
-          >
-            <FileText />
-            PDF
-          </Button>
+      <CardContent className="flex min-h-0 flex-1 flex-col gap-3 p-0 relative">
+        <div className="flex flex-wrap items-center justify-between border-b border-border/60 px-6 py-4 bg-background/50 backdrop-blur-sm z-10 sticky top-0">
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={!hasContent || loading || copying}
+              onClick={() => void copyToClipboard(safeBody)}
+            >
+              <Copy />
+              {copying ? "Copying…" : "Copy"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={!hasContent || loading}
+              onClick={() => downloadText(safeBody)}
+            >
+              <Download />
+              .txt
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={!hasContent || loading}
+              onClick={handlePdfImport}
+            >
+              <FileText />
+              PDF
+            </Button>
+
+            {hasContent && (
+              <div className="flex items-center gap-1 ml-4 border-l border-border/60 pl-4">
+                <span className="text-xs text-muted-foreground mr-1">Template:</span>
+                <button 
+                  onClick={() => setTemplate("modern")}
+                  className={cn("w-5 h-5 rounded-full border-2 transition-all", template === "modern" ? "border-slate-800 scale-110" : "border-transparent bg-slate-200")}
+                  style={{ background: "linear-gradient(135deg, #0f172a 50%, #f8fafc 50%)" }}
+                  title="Modern"
+                />
+                <button 
+                  onClick={() => setTemplate("minimalist")}
+                  className={cn("w-5 h-5 rounded-full border-2 transition-all", template === "minimalist" ? "border-slate-800 scale-110" : "border-transparent bg-slate-200")}
+                  style={{ background: "#ffffff", border: template === "minimalist" ? "2px solid #000" : "2px solid #e2e8f0" }}
+                  title="Minimalist"
+                />
+              </div>
+            )}
+          </div>
+
+          {onApply && (
+             <Button
+               type="button"
+               size="sm"
+               disabled={!hasContent || loading || applying}
+               onClick={onApply}
+               className="bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+             >
+               <Send className="w-4 h-4 mr-1.5" />
+               {applying ? "Applying..." : "Apply Now"}
+             </Button>
+          )}
         </div>
-        <div className="min-h-[320px] flex-1 overflow-y-auto px-6 pb-6">
+        <div className="min-h-[320px] flex-1 overflow-y-auto px-6 pb-6 bg-muted/30">
           {loading ? (
-            <div className="space-y-3 pt-2">
+            <div className="space-y-3 pt-6">
               {Array.from({ length: 6 }).map((_, idx) => (
                 <Skeleton className="h-4 w-full" key={`sk-${idx}`} />
               ))}
             </div>
           ) : hasContent ? (
-            <article className="whitespace-pre-wrap pt-3 text-[0.95rem] leading-[1.72] tracking-tight">
-              {safeBody}
-            </article>
+            <div className="pt-6">
+               <CvTemplateViewer data={parsedData} template={template} />
+            </div>
           ) : (
-            <p className="pt-3 text-sm text-muted-foreground">{emptyFallback}</p>
+            <p className="pt-6 text-sm text-muted-foreground">{emptyFallback}</p>
           )}
         </div>
       </CardContent>

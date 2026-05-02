@@ -23,6 +23,8 @@ export type OutputTabsProps = {
   loadingLetter: boolean;
   candidateName?: string | null;
   locale: LocaleCode;
+  onApply?: () => void;
+  applying?: boolean;
 };
 
 export function OutputTabs({
@@ -32,6 +34,8 @@ export function OutputTabs({
   loadingLetter,
   candidateName,
   locale,
+  onApply,
+  applying,
 }: OutputTabsProps) {
   const label = sanitizeForFile(candidateName);
   const cvSlug = `${label || "candidate"}-${locale}-cv`;
@@ -71,6 +75,8 @@ export function OutputTabs({
               loading={loadingCv}
               emptyFallback="Run “Generate CV” to stream a recruiter-ready synopsis."
               fileStem={cvSlug}
+              onApply={onApply}
+              applying={applying}
             />
           </TabsContent>
           <TabsContent
@@ -84,6 +90,8 @@ export function OutputTabs({
               loading={loadingLetter}
               emptyFallback="Run “Generate cover letter” once the role context feels complete."
               fileStem={letterSlug}
+              onApply={onApply}
+              applying={applying}
             />
           </TabsContent>
         </Tabs>

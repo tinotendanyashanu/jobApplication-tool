@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ClipboardCheck } from "lucide-react";
+import { ArrowLeft, ClipboardCheck, ChevronDown } from "lucide-react";
 import { ProfileForm } from "@/components/profile-form";
 import { JobInput } from "@/components/job-input";
 import { ActionButtons } from "@/components/action-buttons";
@@ -12,7 +12,6 @@ import { KnowledgeBaseUploader, KnowledgeBaseDocument } from "@/components/knowl
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { generateCoverLetter, generateCv } from "@/lib/api";
 import { fetchAutofillFields } from "@/lib/api-scraper";
 import { predictResponse } from "@/lib/api-prediction";
@@ -55,14 +54,15 @@ export default function WorkspacePage() {
     const jd = jobDescription.trim();
     const hasIdentity =
       Boolean((profile.full_name || "").trim()) ||
-      Boolean((profile.summary || "").trim());
+      Boolean((profile.summary || "").trim()) ||
+      kbDocuments.filter(d => d.docType === "data").length > 0;
     const hasEnoughContext = jd.length >= 120;
     return {
       jd,
       disabled: !(hasEnoughContext && hasIdentity),
       hint:
         !hasIdentity
-          ? "Add your name or a short summary—both help the drafts stay anchored."
+          ? "Upload your CV PDF or manually add your name to anchor the draft."
           : !hasEnoughContext
             ? "Paste at least ~120 characters of the posting text so extraction has signal."
             : null,
@@ -71,6 +71,7 @@ export default function WorkspacePage() {
     jobDescription,
     profile.full_name,
     profile.summary,
+    kbDocuments
   ]);
 
   const payload = useMemo(() => {
@@ -192,7 +193,7 @@ export default function WorkspacePage() {
       });
       setSaveMessage(
         analysis
-          ? "Snapshot saved against your Postgres tracker — Phase 5 response estimate attached when match metadata exists."
+          ? "Snapshot saved against your Postgres tracker — open Dashboard to tweak status filters."
           : "Snapshot saved against your Postgres tracker — open Dashboard to tweak status filters."
       );
     } catch (err) {
@@ -249,30 +250,18 @@ export default function WorkspacePage() {
                 Workspace
               </p>
               <h1 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
-                Shape your narrative
+                Create an Application
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                Feed structured facts plus the job context. Tune each artifact independently,
-                iterate quickly, and export recruiter-ready plaintext or PDF snapshots.
+                Upload your CV, paste the job link, and let the assistant craft a perfect Canva-style CV and cover letter.
               </p>
             </div>
           </div>
           <Separator className="sm:hidden" />
-          <div className="rounded-3xl border border-border/70 bg-background/90 px-4 py-3 text-xs shadow-sm backdrop-blur-sm sm:w-60">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.27em] text-muted-foreground">
-              API target
-            </p>
-            <p className="mt-2 break-all font-mono text-[0.75rem] text-foreground/90">
-              {process.env.NEXT_PUBLIC_API_URL?.trim()
-                ? process.env.NEXT_PUBLIC_API_URL
-                : "http://127.0.0.1:8000"}
-            </p>
-          </div>
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.06fr)_minmax(460px,0.94fr)]">
           <section className="space-y-6">
-            <ProfileForm profile={profile} onChange={setProfile} />
             <div className="rounded-3xl border border-border/40 bg-background/80 p-6 shadow-xs backdrop-blur-xl transition-all hover:border-border/80">
               <KnowledgeBaseUploader
                 documents={kbDocuments}
@@ -283,6 +272,15 @@ export default function WorkspacePage() {
                 }
               />
             </div>
+            <details className="group [&_summary::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer items-center justify-between rounded-xl bg-muted/30 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors">
+                <span>Advanced Profile Settings</span>
+                <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
+              </summary>
+              <div className="mt-4">
+                <ProfileForm profile={profile} onChange={setProfile} />
+              </div>
+            </details>
             <JobInput
               jobDescription={jobDescription}
               jobLink={jobLink}
@@ -306,52 +304,13 @@ export default function WorkspacePage() {
               onGenerateCv={() => void handleGenerateCv()}
               onGenerateCoverLetter={() => void handleGenerateLetter()}
             />
-            <div className="space-y-3 rounded-2xl border border-border/70 bg-muted/15 p-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="space-y-1">
-                  <p className="text-sm font-semibold leading-tight tracking-tight">Save to tracker</p>
-                  <p className="text-xs leading-relaxed text-muted-foreground">
-                    Persists the posting, regenerated CV plus letter text, Phase 3 scores, strengths / gaps,
-                    keyed to your browser UUID in Postgres via FastAPI.
-                  </p>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="shrink-0"
-                  disabled={!canPersist || savingTracker || loadingCv || loadingLetter}
-                  onClick={() => void handleSaveToTracker()}
-                >
-                  {savingTracker ? "Saving snapshot…" : "Save snapshot"}
-                </Button>
-              </div>
-              {!canPersist ? (
-                <p className="text-xs text-muted-foreground">
-                  Waiting on both plaintext artifacts plus at least ~120 characters of posting text—the match narratives piggy-back on regenerate calls automatically.
-                </p>
-              ) : saveMessage ? (
-                <Alert className="border-emerald-600/35 bg-emerald-500/10">
-                  <AlertTitle>Persisted</AlertTitle>
-                  <AlertDescription className="leading-relaxed">{saveMessage}</AlertDescription>
-                </Alert>
-              ) : (
-                <p className="text-xs text-muted-foreground">
-                  Each generation attaches structured analysis + deterministic scoring sourced from Phase 3, so dashboards stay truthful without extra hops.
-                </p>
-              )}
-            </div>
+            
             <AutofillPanel
               data={autofillData}
               loading={loadingAutofill}
               canRequest={Boolean(cvText?.trim()) && Boolean(letterText?.trim())}
               onRequest={() => void handleRequestAutofill()}
             />
-            <Link
-              href="/"
-              className="inline-flex text-[0.8rem] font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-            >
-              Need onboarding copy? Jump back home.
-            </Link>
           </section>
           <section
             className={cn(
@@ -366,9 +325,16 @@ export default function WorkspacePage() {
                   {error}
                 </AlertDescription>
               </Alert>
+            ) : saveMessage ? (
+               <Alert className="border-emerald-600/35 bg-emerald-500/10 animate-in fade-in-0">
+                 <AlertTitle>Success</AlertTitle>
+                 <AlertDescription className="whitespace-pre-wrap">
+                   {saveMessage}
+                 </AlertDescription>
+               </Alert>
             ) : (
               <p className="text-xs text-muted-foreground">
-                API responses stream through once each button settles—downloads stay local to your browser.
+                API responses stream through once each button settles. Use the Apply button to save to your tracker.
               </p>
             )}
             <OutputTabs
@@ -376,8 +342,10 @@ export default function WorkspacePage() {
               loadingLetter={loadingLetter}
               cvText={cvText}
               coverLetterText={letterText}
-              candidateName={profile.full_name}
+              candidateName={profile.full_name || kbDocuments[0]?.filename.replace(".pdf", "")}
               locale={locale}
+              onApply={canPersist ? handleSaveToTracker : undefined}
+              applying={savingTracker}
             />
           </section>
         </div>
