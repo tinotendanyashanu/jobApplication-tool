@@ -35,6 +35,7 @@ class OpenAIClient:
         temperature: float = 0.35,
         max_tokens: int = 4096,
         response_format: dict | None = None,
+        extra_body: dict | None = None,
     ) -> str:
         kwargs: dict = {
             "model": model,
@@ -47,6 +48,8 @@ class OpenAIClient:
         }
         if response_format is not None:
             kwargs["response_format"] = response_format
+        if extra_body is not None:
+            kwargs["extra_body"] = extra_body
         response = self._client.chat.completions.create(**kwargs)
         choice = response.choices[0]
         content = choice.message.content
@@ -59,7 +62,7 @@ class OpenAIClient:
         user: str,
         model: str,
         temperature: float = 0.25,
-        max_tokens: int = 2048,
+        max_tokens: int = 4096,
     ) -> str:
         """Chat completion constrained to JSON for structured pipelines."""
 
@@ -70,4 +73,7 @@ class OpenAIClient:
             temperature=temperature,
             max_tokens=max_tokens,
             response_format={"type": "json_object"},
+            # Disable thinking for JSON calls — thinking tokens consume output budget
+            # and cause truncation before the JSON is complete.
+            extra_body={"google": {"thinking_config": {"thinking_budget": 0}}},
         )

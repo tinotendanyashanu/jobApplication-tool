@@ -37,7 +37,7 @@ def extract_job_text(
         user=user,
         model=model,
         temperature=0.1,
-        max_tokens=1500,
+        max_tokens=2048,
     )
     if result.strip() == "__NOT_A_JOB__":
         return None
