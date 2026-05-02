@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef } from "react";
 import { Copy, Download, FileText, Send } from "lucide-react";
+import { useReactToPrint } from "react-to-print";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -39,7 +40,8 @@ export function PreviewPanel({
   applying,
 }: PreviewPanelProps) {
   const [copying, setCopying] = useState(false);
-  const [template, setTemplate] = useState<TemplateType>("modern");
+  const [template, setTemplate] = useState<TemplateType>("integration");
+  const printRef = useRef<HTMLDivElement>(null);
 
   const hasContent = Boolean((body ?? "").trim());
   const safeBody = body?.trim() || "";
@@ -66,11 +68,14 @@ export function PreviewPanel({
     }
   }
 
+  const handleReactToPrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: filenameBase,
+  });
+
   function handlePdfDownload() {
     if (hasParsedContent) {
-      void import("@/lib/pdf").then(({ downloadCvPdf }) => {
-        downloadCvPdf(parsedData, `${filenameBase}.pdf`);
-      });
+      handleReactToPrint();
     } else {
       void import("@/lib/pdf").then(({ downloadPlainTextPdf }) => {
         if (!safeBody.trim()) return;
@@ -143,6 +148,15 @@ export function PreviewPanel({
                   }}
                   title="Minimalist"
                 />
+                <button
+                  onClick={() => setTemplate("integration")}
+                  className={cn(
+                    "w-5 h-5 rounded-full border-2 transition-all",
+                    template === "integration" ? "border-slate-800 scale-110" : "border-transparent bg-slate-200",
+                  )}
+                  style={{ background: "linear-gradient(135deg, #14b8a6 50%, #1e293b 50%)" }}
+                  title="Integration"
+                />
               </div>
             )}
           </div>
@@ -169,7 +183,7 @@ export function PreviewPanel({
               ))}
             </div>
           ) : hasContent ? (
-            <div className="pt-6">
+            <div className="pt-6" ref={printRef}>
               {isCv ? (
                 <CvTemplateViewer data={parsedData} template={template} />
               ) : (
