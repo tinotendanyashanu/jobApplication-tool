@@ -8,6 +8,7 @@ import { JobInput } from "@/components/job-input";
 import { ActionButtons } from "@/components/action-buttons";
 import { OutputTabs } from "@/components/output-tabs";
 import { AutofillPanel } from "@/components/autofill-panel";
+import { KnowledgeBaseUploader, KnowledgeBaseDocument } from "@/components/knowledge-base";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -37,6 +38,18 @@ export default function WorkspacePage() {
   const [savingTracker, setSavingTracker] = useState(false);
   const [autofillData, setAutofillData] = useState<AutofillResponse | null>(null);
   const [loadingAutofill, setLoadingAutofill] = useState(false);
+  const [kbDocuments, setKbDocuments] = useState<KnowledgeBaseDocument[]>([]);
+
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem("jobhunt_kb_docs");
+      if (saved) setKbDocuments(JSON.parse(saved));
+    } catch {}
+  }, []);
+
+  React.useEffect(() => {
+    localStorage.setItem("jobhunt_kb_docs", JSON.stringify(kbDocuments));
+  }, [kbDocuments]);
 
   const formReady = useMemo(() => {
     const jd = jobDescription.trim();
@@ -67,8 +80,9 @@ export default function WorkspacePage() {
       job_link: jobLink.trim() || null,
       locale,
       include_match_in_prompts: true,
+      cv_knowledge_base: kbDocuments.map(d => d.text),
     }),
-    [formReady.jd, jobLink, locale, profile]
+    [formReady.jd, jobLink, locale, profile, kbDocuments]
   );
 
   async function handleGenerateCv() {
@@ -205,9 +219,9 @@ export default function WorkspacePage() {
   }
 
   return (
-    <main className="relative flex flex-1 flex-col bg-muted/35">
-      <div className="pointer-events-none absolute inset-x-0 top-[-28%] isolate -z-10 h-[560px] overflow-hidden blur-3xl">
-        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-muted/65 via-accent/65 to-muted/80 opacity-90" />
+    <main className="relative flex flex-1 flex-col bg-background selection:bg-foreground/10">
+      <div className="pointer-events-none absolute inset-x-0 top-[-20%] isolate -z-10 h-[500px] overflow-hidden blur-[100px]">
+        <div className="absolute inset-0 mx-auto max-w-4xl rounded-full bg-linear-to-b from-foreground/5 to-transparent opacity-80" />
       </div>
       <section className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 py-12 sm:px-6 lg:px-8">
         <header className="flex flex-wrap items-start justify-between gap-4 animate-in fade-in-0 zoom-in-95">
@@ -257,6 +271,13 @@ export default function WorkspacePage() {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.06fr)_minmax(460px,0.94fr)]">
           <section className="space-y-6">
             <ProfileForm profile={profile} onChange={setProfile} />
+            <div className="rounded-3xl border border-border/40 bg-background/80 p-6 shadow-xs backdrop-blur-xl transition-all hover:border-border/80">
+              <KnowledgeBaseUploader 
+                documents={kbDocuments} 
+                onAddDocument={(doc) => setKbDocuments(prev => [...prev, doc])} 
+                onRemoveDocument={(id) => setKbDocuments(prev => prev.filter(d => d.id !== id))} 
+              />
+            </div>
             <JobInput
               jobDescription={jobDescription}
               jobLink={jobLink}
@@ -329,8 +350,8 @@ export default function WorkspacePage() {
           </section>
           <section
             className={cn(
-              "lg:border-border/65 lg:bg-background lg:sticky lg:top-[88px]",
-              "space-y-4 rounded-[32px] border border-transparent p-5 shadow-none backdrop-blur-0 lg:rounded-3xl lg:border lg:p-8 lg:shadow-lg"
+              "lg:sticky lg:top-[88px] flex flex-col",
+              "space-y-4 rounded-[32px] border border-border/30 bg-background/60 p-5 shadow-xs backdrop-blur-2xl transition-all lg:rounded-3xl lg:border lg:p-8 lg:shadow-md hover:border-border/60"
             )}
           >
             {error ? (

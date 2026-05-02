@@ -43,6 +43,7 @@ def render_user_prompt(
     locale: Locale,
     job_analysis: JobAnalysis,
     match_result: ProfileMatchResponse | None = None,
+    cv_knowledge_base: list[str] | None = None,
 ) -> str:
     template = _load_template(template_name)
     profile_json = json.dumps(
@@ -60,10 +61,14 @@ def render_user_prompt(
         if match_result
         else "null"
     )
+    kb_text = ""
+    if cv_knowledge_base:
+        kb_text = "\n\n".join(f"--- PREVIOUS CV ---\n{text}" for text in cv_knowledge_base)
     return (
         template.replace("__PROFILE_JSON__", profile_json)
         .replace("__JOB_DESCRIPTION__", job_description.strip())
         .replace("__JOB_ANALYSIS_JSON__", analysis_json)
         .replace("__MATCH_JSON__", match_json)
         .replace("__LOCALE_INSTRUCTION__", locale_instruction(locale))
+        .replace("__CV_KNOWLEDGE_BASE__", kb_text)
     )

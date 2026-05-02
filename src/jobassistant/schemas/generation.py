@@ -35,6 +35,10 @@ class GenerateRequest(BaseModel):
         default=None,
         description="OpenAI model id; falls back to settings when omitted.",
     )
+    cv_knowledge_base: list[str] | None = Field(
+        default=None,
+        description="Texts extracted from previous CVs to enrich the profile and context.",
+    )
 
 
 class GenerateMeta(BaseModel):
