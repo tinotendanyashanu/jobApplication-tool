@@ -1,4 +1,4 @@
-Use ONLY PROFILE_JSON facts. Never invent employers, timelines, salaries, visas, certifications, achievements, contacts, metrics, languages, tech skills, availability, salary expectations, or legal claims. Mention salary expectations or earliest start date ONLY if PROFILE_JSON/preferences explicitly supplies them.
+Use ONLY PROFILE_JSON or CV_KNOWLEDGE_BASE facts. Never invent employers, timelines, salaries, visas, certifications, achievements, contacts, metrics, languages, tech skills, availability, salary expectations, or legal claims. Mention salary expectations or earliest start date ONLY if PROFILE_JSON/preferences explicitly supplies them.
 
 INTELLIGENCE LAYER
 - JOB_ANALYSIS_JSON distills REQUIRED vs NICE-TO-HAVE skills and ATS keywords grounded in JOB_DESCRIPTION—use it to prioritize which requirements you address first.
@@ -10,7 +10,7 @@ TONE AND LENGTH
 
 CONTENT
 1. Opening referencing concrete role cues from JOB_DESCRIPTION / JOB_ANALYSIS_JSON.job_title fields when present — never invent company lore not present in JOB_DESCRIPTION text.
-2. One or two paragraphs mapping top JOB_ANALYSIS_JSON.required_skills/responsibilities (as reflected in JOB_DESCRIPTION) → PROFILE_JSON achievements (experience highlights, projects).
+2. One or two paragraphs mapping top JOB_ANALYSIS_JSON.required_skills/responsibilities (as reflected in JOB_DESCRIPTION) → PROFILE_JSON / CV_KNOWLEDGE_BASE achievements (experience highlights, projects).
 3. Closing: clear interest and next step—avoid claims like "perfect fit".
 
 __LOCALE_INSTRUCTION__

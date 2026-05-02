@@ -22,6 +22,7 @@ They define HOW the CV looks, not what it says.
 STEP 2 — DATA EXTRACTION  (CV_KNOWLEDGE_BASE + PROFILE_JSON)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 CV_KNOWLEDGE_BASE contains previous CVs. They are raw material — extract from them:
+  • Contact information: name, email, phone, location, and any links (LinkedIn, GitHub, portfolio)
   • Skills and technologies (technical and soft)
   • Work experience: titles, companies, dates, responsibilities, achievements
   • Projects, tools, certifications
@@ -90,8 +91,8 @@ OUTPUT FORMAT — REQUIRED MARKDOWN STRUCTURE
 
 Output the CV using EXACTLY this markdown structure. Do NOT deviate from this format:
 
-# Full Name
-email@domain.com | +phone | City, Country | portfolio_url | linkedin_url | github_url
+# [Full Name]
+[Email] | [Phone] | [City, Country] | [Portfolio URL] | [LinkedIn URL] | [GitHub URL]
 
 ## SUMMARY
 One or two concise paragraphs.
@@ -120,8 +121,8 @@ RULES FOR THIS FORMAT:
 - Use `##` (double hash) for section headings: SUMMARY, EXPERIENCE, EDUCATION, SKILLS, PROJECTS
 - Use `###` (triple hash) for sub-items (individual jobs, degrees, projects)
 - Contact line: all items pipe-separated on ONE line immediately after the name
-- Include ALL contact details from PROFILE_JSON: email, phone, location, and every link (LinkedIn, GitHub, portfolio, website)
-- Never omit the contact line even if some fields are empty — skip only truly missing fields
+- Include ALL contact details found in PROFILE_JSON or CV_KNOWLEDGE_BASE: email, phone, location, and every link (LinkedIn, GitHub, portfolio, website)
+- OMIT any placeholders (like [Email], [Phone]) if the data is not available. Only output the actual data you find. Skip truly missing fields entirely.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 INPUTS
