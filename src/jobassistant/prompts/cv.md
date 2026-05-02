@@ -85,6 +85,45 @@ TRUTHFULNESS  (non-negotiable)
 __LOCALE_INSTRUCTION__
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OUTPUT FORMAT — REQUIRED MARKDOWN STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Output the CV using EXACTLY this markdown structure. Do NOT deviate from this format:
+
+# Full Name
+email@domain.com | +phone | City, Country | portfolio_url | linkedin_url | github_url
+
+## SUMMARY
+One or two concise paragraphs.
+
+## EXPERIENCE
+
+### Job Title | Company Name | Start Date – End Date
+- Achievement bullet
+- Achievement bullet
+
+## EDUCATION
+
+### Degree Title | Institution Name | Year
+
+## SKILLS
+
+Category Name: Skill1, Skill2, Skill3
+
+## PROJECTS
+
+### Project Name
+- Bullet describing what was built and the impact
+
+RULES FOR THIS FORMAT:
+- Use `#` (single hash) ONLY for the candidate name — no other `#` headings
+- Use `##` (double hash) for section headings: SUMMARY, EXPERIENCE, EDUCATION, SKILLS, PROJECTS
+- Use `###` (triple hash) for sub-items (individual jobs, degrees, projects)
+- Contact line: all items pipe-separated on ONE line immediately after the name
+- Include ALL contact details from PROFILE_JSON: email, phone, location, and every link (LinkedIn, GitHub, portfolio, website)
+- Never omit the contact line even if some fields are empty — skip only truly missing fields
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 INPUTS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

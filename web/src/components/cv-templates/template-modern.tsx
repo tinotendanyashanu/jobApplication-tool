@@ -2,8 +2,24 @@ import React from "react";
 import { ParsedCV } from "@/lib/parse-cv";
 import { Mail, Phone, MapPin, Globe } from "lucide-react";
 
+function ContactIcon({ value }: { value: string }) {
+  if (value.includes("@")) return <Mail className="size-3 shrink-0" />;
+  if (/^[\+\d][\d\s\-\(\)]{5,}$/.test(value.trim())) return <Phone className="size-3 shrink-0" />;
+  if (/^[A-Z]/.test(value) && !value.startsWith("http") && !value.includes(".")) return <MapPin className="size-3 shrink-0" />;
+  return <Globe className="size-3 shrink-0" />;
+}
+
+function ContactLink({ value }: { value: string }) {
+  const isUrl = value.startsWith("http") || value.includes("linkedin.com") || value.includes("github.com") || value.includes("gitlab.com");
+  const href = isUrl ? (value.startsWith("http") ? value : `https://${value}`) : null;
+  const display = value.replace(/^https?:\/\/(www\.)?/, "");
+  if (href) {
+    return <a href={href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-slate-100">{display}</a>;
+  }
+  return <span>{value}</span>;
+}
+
 export function TemplateModern({ data }: { data: ParsedCV }) {
-  // Experience -> Education -> Skills
   return (
     <div className="w-full bg-white text-slate-800 font-sans shadow-lg mx-auto" style={{ aspectRatio: "1 / 1.414", minHeight: "800px" }}>
       {/* Header Area */}
@@ -12,8 +28,8 @@ export function TemplateModern({ data }: { data: ParsedCV }) {
         <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-300">
           {data.header.contact.map((c, i) => (
             <span key={i} className="flex items-center gap-1">
-               {c.includes("@") ? <Mail className="size-3" /> : c.match(/[0-9]{5}/) ? <Phone className="size-3" /> : <Globe className="size-3"/>}
-               {c}
+              <ContactIcon value={c} />
+              <ContactLink value={c} />
             </span>
           ))}
         </div>

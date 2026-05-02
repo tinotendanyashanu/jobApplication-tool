@@ -1,8 +1,17 @@
 import React from "react";
 import { ParsedCV } from "@/lib/parse-cv";
 
+function ContactEntry({ value }: { value: string }) {
+  const isUrl = value.startsWith("http") || value.includes("linkedin.com") || value.includes("github.com") || value.includes("gitlab.com");
+  const href = isUrl ? (value.startsWith("http") ? value : `https://${value}`) : null;
+  const display = value.replace(/^https?:\/\/(www\.)?/, "");
+  if (href) {
+    return <a href={href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-gray-900">{display}</a>;
+  }
+  return <span>{value}</span>;
+}
+
 export function TemplateMinimalist({ data }: { data: ParsedCV }) {
-  // Experience -> Education -> Skills
   return (
     <div className="w-full bg-white text-gray-900 font-serif shadow-lg mx-auto p-10" style={{ aspectRatio: "1 / 1.414", minHeight: "800px" }}>
       {/* Header Area */}
@@ -11,7 +20,7 @@ export function TemplateMinimalist({ data }: { data: ParsedCV }) {
         <div className="flex flex-wrap justify-center gap-3 text-xs text-gray-600">
           {data.header.contact.map((c, i) => (
             <React.Fragment key={i}>
-              <span>{c}</span>
+              <ContactEntry value={c} />
               {i < data.header.contact.length - 1 && <span>•</span>}
             </React.Fragment>
           ))}
