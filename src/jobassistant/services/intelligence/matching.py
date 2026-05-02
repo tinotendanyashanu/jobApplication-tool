@@ -63,7 +63,7 @@ def run_profile_match(
         user=payload,
         model=model,
         temperature=0.25,
-        max_tokens=1200,
+        max_tokens=2048,
     )
     narratives = parse_json_object(raw)
 

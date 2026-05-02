@@ -38,7 +38,7 @@ def run_job_analysis(
         user=user_payload,
         model=model,
         temperature=0.1,
-        max_tokens=1800,
+        max_tokens=2048,
     )
     payload = parse_json_object(raw)
     normalized = payload.copy()
