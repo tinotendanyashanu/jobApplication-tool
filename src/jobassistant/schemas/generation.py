@@ -37,7 +37,11 @@ class GenerateRequest(BaseModel):
     )
     cv_knowledge_base: list[str] | None = Field(
         default=None,
-        description="Texts extracted from previous CVs to enrich the profile and context.",
+        description="Texts extracted from previous CVs — raw data source (skills, experience, achievements).",
+    )
+    cv_style_templates: list[str] | None = Field(
+        default=None,
+        description="Texts extracted from sample CVs — formatting/style reference only, data inside is ignored.",
     )
 
 

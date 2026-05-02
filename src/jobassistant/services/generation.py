@@ -77,6 +77,7 @@ def generate_cv(
         job_analysis=job_analysis,
         match_result=match_result,
         cv_knowledge_base=request.cv_knowledge_base,
+        cv_style_templates=request.cv_style_templates,
     )
     return llm.complete(
         system=SHARED_SYSTEM_PROMPT,
@@ -102,6 +103,7 @@ def generate_cover_letter(
         job_analysis=job_analysis,
         match_result=match_result,
         cv_knowledge_base=request.cv_knowledge_base,
+        cv_style_templates=request.cv_style_templates,
     )
     return llm.complete(
         system=SHARED_SYSTEM_PROMPT,

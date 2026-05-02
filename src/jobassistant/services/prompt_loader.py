@@ -44,6 +44,7 @@ def render_user_prompt(
     job_analysis: JobAnalysis,
     match_result: ProfileMatchResponse | None = None,
     cv_knowledge_base: list[str] | None = None,
+    cv_style_templates: list[str] | None = None,
 ) -> str:
     template = _load_template(template_name)
     profile_json = json.dumps(
@@ -64,6 +65,11 @@ def render_user_prompt(
     kb_text = ""
     if cv_knowledge_base:
         kb_text = "\n\n".join(f"--- PREVIOUS CV ---\n{text}" for text in cv_knowledge_base)
+    style_text = ""
+    if cv_style_templates:
+        style_text = "\n\n".join(
+            f"--- STYLE TEMPLATE {i + 1} ---\n{text}" for i, text in enumerate(cv_style_templates)
+        )
     return (
         template.replace("__PROFILE_JSON__", profile_json)
         .replace("__JOB_DESCRIPTION__", job_description.strip())
@@ -71,4 +77,5 @@ def render_user_prompt(
         .replace("__MATCH_JSON__", match_json)
         .replace("__LOCALE_INSTRUCTION__", locale_instruction(locale))
         .replace("__CV_KNOWLEDGE_BASE__", kb_text)
+        .replace("__CV_STYLE_TEMPLATES__", style_text)
     )

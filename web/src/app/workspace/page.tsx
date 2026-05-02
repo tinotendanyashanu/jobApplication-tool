@@ -73,17 +73,19 @@ export default function WorkspacePage() {
     profile.summary,
   ]);
 
-  const payload = useMemo(
-    () => ({
+  const payload = useMemo(() => {
+    const dataDocs = kbDocuments.filter(d => d.docType === "data").map(d => d.text);
+    const styleDocs = kbDocuments.filter(d => d.docType === "style").map(d => d.text);
+    return {
       profile: sanitizeProfile(profile),
       job_description: formReady.jd,
       job_link: jobLink.trim() || null,
       locale,
       include_match_in_prompts: true,
-      cv_knowledge_base: kbDocuments.map(d => d.text),
-    }),
-    [formReady.jd, jobLink, locale, profile, kbDocuments]
-  );
+      cv_knowledge_base: dataDocs.length > 0 ? dataDocs : null,
+      cv_style_templates: styleDocs.length > 0 ? styleDocs : null,
+    };
+  }, [formReady.jd, jobLink, locale, profile, kbDocuments]);
 
   async function handleGenerateCv() {
     setError(null);
@@ -272,10 +274,13 @@ export default function WorkspacePage() {
           <section className="space-y-6">
             <ProfileForm profile={profile} onChange={setProfile} />
             <div className="rounded-3xl border border-border/40 bg-background/80 p-6 shadow-xs backdrop-blur-xl transition-all hover:border-border/80">
-              <KnowledgeBaseUploader 
-                documents={kbDocuments} 
-                onAddDocument={(doc) => setKbDocuments(prev => [...prev, doc])} 
-                onRemoveDocument={(id) => setKbDocuments(prev => prev.filter(d => d.id !== id))} 
+              <KnowledgeBaseUploader
+                documents={kbDocuments}
+                onAddDocument={(doc) => setKbDocuments(prev => [...prev, doc])}
+                onRemoveDocument={(id) => setKbDocuments(prev => prev.filter(d => d.id !== id))}
+                onChangeDocType={(id, docType) =>
+                  setKbDocuments(prev => prev.map(d => d.id === id ? { ...d, docType } : d))
+                }
               />
             </div>
             <JobInput
