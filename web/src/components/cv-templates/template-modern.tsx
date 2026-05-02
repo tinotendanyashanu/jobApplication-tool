@@ -35,9 +35,9 @@ export function TemplateModern({ data }: { data: ParsedCV }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3">
+      <div className="grid grid-cols-3">
         {/* Main Body */}
-        <div className="md:col-span-2 p-8 space-y-6">
+        <div className="col-span-2 p-8 space-y-6">
           {data.summary && (
             <section>
               <h2 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-1 mb-3 uppercase tracking-widest">Summary</h2>

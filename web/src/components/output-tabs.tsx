@@ -73,7 +73,7 @@ export function OutputTabs({
               subtitle="Optimized for scanners and recruiter skim paths"
               body={cvText}
               loading={loadingCv}
-              emptyFallback="Run “Generate CV” to stream a recruiter-ready synopsis."
+              emptyFallback='Run "Generate CV" to stream a recruiter-ready synopsis.'
               fileStem={cvSlug}
               onApply={onApply}
               applying={applying}
@@ -88,8 +88,9 @@ export function OutputTabs({
               subtitle="Narrative that ties requirements to evidenced wins"
               body={coverLetterText}
               loading={loadingLetter}
-              emptyFallback="Run “Generate cover letter” once the role context feels complete."
+              emptyFallback='Run "Generate cover letter" once the role context feels complete.'
               fileStem={letterSlug}
+              variant="letter"
               onApply={onApply}
               applying={applying}
             />

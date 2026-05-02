@@ -22,6 +22,7 @@ export type PreviewPanelProps = {
   loading?: boolean;
   emptyFallback: string;
   fileStem: string;
+  variant?: "cv" | "letter";
   onApply?: () => void;
   applying?: boolean;
 };
@@ -33,6 +34,7 @@ export function PreviewPanel({
   loading,
   emptyFallback,
   fileStem,
+  variant = "cv",
   onApply,
   applying,
 }: PreviewPanelProps) {
@@ -44,6 +46,9 @@ export function PreviewPanel({
   const parsedData = useMemo(() => parseMarkdownCV(safeBody), [safeBody]);
 
   const filenameBase = useMemo(() => sanitizeFilename(fileStem), [fileStem]);
+
+  const isCv = variant === "cv";
+  const hasParsedContent = isCv && Boolean(parsedData.header.name || parsedData.experience.length > 0);
 
   function downloadText(content: string) {
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
@@ -61,11 +66,17 @@ export function PreviewPanel({
     }
   }
 
-  function handlePdfImport() {
-    void import("@/lib/pdf").then(({ downloadPlainTextPdf }) => {
-      if (!safeBody.trim()) return;
-      downloadPlainTextPdf(title, safeBody, `${filenameBase}.pdf`);
-    });
+  function handlePdfDownload() {
+    if (hasParsedContent) {
+      void import("@/lib/pdf").then(({ downloadCvPdf }) => {
+        downloadCvPdf(parsedData, `${filenameBase}.pdf`);
+      });
+    } else {
+      void import("@/lib/pdf").then(({ downloadPlainTextPdf }) => {
+        if (!safeBody.trim()) return;
+        downloadPlainTextPdf(title, safeBody, `${filenameBase}.pdf`);
+      });
+    }
   }
 
   return (
@@ -102,25 +113,34 @@ export function PreviewPanel({
               size="sm"
               variant="outline"
               disabled={!hasContent || loading}
-              onClick={handlePdfImport}
+              onClick={handlePdfDownload}
             >
               <FileText />
               PDF
             </Button>
 
-            {hasContent && (
+            {hasContent && isCv && (
               <div className="flex items-center gap-1 ml-4 border-l border-border/60 pl-4">
                 <span className="text-xs text-muted-foreground mr-1">Template:</span>
-                <button 
+                <button
                   onClick={() => setTemplate("modern")}
-                  className={cn("w-5 h-5 rounded-full border-2 transition-all", template === "modern" ? "border-slate-800 scale-110" : "border-transparent bg-slate-200")}
+                  className={cn(
+                    "w-5 h-5 rounded-full border-2 transition-all",
+                    template === "modern" ? "border-slate-800 scale-110" : "border-transparent bg-slate-200",
+                  )}
                   style={{ background: "linear-gradient(135deg, #0f172a 50%, #f8fafc 50%)" }}
                   title="Modern"
                 />
-                <button 
+                <button
                   onClick={() => setTemplate("minimalist")}
-                  className={cn("w-5 h-5 rounded-full border-2 transition-all", template === "minimalist" ? "border-slate-800 scale-110" : "border-transparent bg-slate-200")}
-                  style={{ background: "#ffffff", border: template === "minimalist" ? "2px solid #000" : "2px solid #e2e8f0" }}
+                  className={cn(
+                    "w-5 h-5 rounded-full border-2 transition-all",
+                    template === "minimalist" ? "border-slate-800 scale-110" : "border-transparent bg-slate-200",
+                  )}
+                  style={{
+                    background: "#ffffff",
+                    border: template === "minimalist" ? "2px solid #000" : "2px solid #e2e8f0",
+                  }}
                   title="Minimalist"
                 />
               </div>
@@ -128,18 +148,19 @@ export function PreviewPanel({
           </div>
 
           {onApply && (
-             <Button
-               type="button"
-               size="sm"
-               disabled={!hasContent || loading || applying}
-               onClick={onApply}
-               className="bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
-             >
-               <Send className="w-4 h-4 mr-1.5" />
-               {applying ? "Applying..." : "Apply Now"}
-             </Button>
+            <Button
+              type="button"
+              size="sm"
+              disabled={!hasContent || loading || applying}
+              onClick={onApply}
+              className="bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+            >
+              <Send className="w-4 h-4 mr-1.5" />
+              {applying ? "Applying..." : "Apply Now"}
+            </Button>
           )}
         </div>
+
         <div className="min-h-[320px] flex-1 overflow-y-auto px-6 pb-6 bg-muted/30">
           {loading ? (
             <div className="space-y-3 pt-6">
@@ -149,7 +170,11 @@ export function PreviewPanel({
             </div>
           ) : hasContent ? (
             <div className="pt-6">
-               <CvTemplateViewer data={parsedData} template={template} />
+              {isCv ? (
+                <CvTemplateViewer data={parsedData} template={template} />
+              ) : (
+                <LetterViewer text={safeBody} />
+              )}
             </div>
           ) : (
             <p className="pt-6 text-sm text-muted-foreground">{emptyFallback}</p>
@@ -157,6 +182,28 @@ export function PreviewPanel({
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+function LetterViewer({ text }: { text: string }) {
+  const paragraphs = text
+    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/\*\*/g, "")
+    .split(/\n{2,}/)
+    .map((p) => p.replace(/\n/g, " ").trim())
+    .filter(Boolean);
+
+  return (
+    <div
+      className="w-full bg-white shadow-lg mx-auto p-10 font-sans text-gray-800"
+      style={{ minHeight: "800px" }}
+    >
+      {paragraphs.map((para, i) => (
+        <p key={i} className="text-sm leading-relaxed mb-4 text-gray-700">
+          {para}
+        </p>
+      ))}
+    </div>
   );
 }
 
