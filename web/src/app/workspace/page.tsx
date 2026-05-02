@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ClipboardCheck } from "lucide-react";
 import { ProfileForm } from "@/components/profile-form";
 import { JobInput } from "@/components/job-input";
@@ -40,14 +40,14 @@ export default function WorkspacePage() {
   const [loadingAutofill, setLoadingAutofill] = useState(false);
   const [kbDocuments, setKbDocuments] = useState<KnowledgeBaseDocument[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       const saved = localStorage.getItem("jobhunt_kb_docs");
       if (saved) setKbDocuments(JSON.parse(saved));
     } catch {}
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     localStorage.setItem("jobhunt_kb_docs", JSON.stringify(kbDocuments));
   }, [kbDocuments]);
 
