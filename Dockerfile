@@ -20,4 +20,5 @@ RUN chmod +x scripts/railway-migrate.sh \
 
 EXPOSE 8000
 
-CMD sh -c 'exec uvicorn jobassistant.api.main:app --host 0.0.0.0 --port "${PORT:-8000}"'
+# Single shell so Railway $PORT expands reliably (avoid nested sh -c quoting issues).
+CMD ["/bin/sh", "-c", "exec uvicorn jobassistant.api.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

@@ -33,7 +33,7 @@ from jobassistant.services.intelligence.job_analysis import run_job_analysis
 from jobassistant.services.intelligence.matching import run_profile_match
 from jobassistant.services.llm import OpenAIClient
 from jobassistant.services.output import write_text_outputs
-from jobassistant.db.pool import close_pool, init_pool
+from jobassistant.db.pool import close_pool, configure_db
 from jobassistant.api.applications_router import router as applications_router
 from jobassistant.api.prediction_router import router as prediction_router
 from jobassistant.api.scraper_router import router as scraper_router
@@ -43,9 +43,9 @@ from jobassistant.api.files_router import router as files_router
 
 @asynccontextmanager
 async def _lifespan(_app: FastAPI):
+    # Lazy pool (first /applications request) so Railway /health comes up without waiting on Postgres.
     cfg = get_settings()
-    if cfg.database_url:
-        init_pool(cfg.database_url)
+    configure_db(cfg.database_url)
     yield
     close_pool()
 
@@ -200,6 +200,12 @@ async def generate_cover_letter_route(
 
 @app.get("/health")
 async def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@app.get("/")
+async def root() -> dict[str, str]:
+    """Lightweight root for platforms that default the deploy health probe to ``/``."""
     return {"status": "ok"}
 
 
