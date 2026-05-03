@@ -346,6 +346,7 @@ export default function WorkspacePage() {
               locale={locale}
               onApply={canPersist ? handleSaveToTracker : undefined}
               applying={savingTracker}
+              onChangeCvText={setCvText}
             />
           </section>
         </div>

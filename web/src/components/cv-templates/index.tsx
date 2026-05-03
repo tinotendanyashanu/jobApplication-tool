@@ -6,12 +6,17 @@ import { ParsedCV } from "@/lib/parse-cv";
 
 export type TemplateType = "modern" | "minimalist" | "integration";
 
-export function CvTemplateViewer({ data, template }: { data: ParsedCV, template: TemplateType }) {
+export type TemplateProps = {
+  data: ParsedCV;
+  onUpdateHeader?: (newName: string, newContact: string[]) => void;
+};
+
+export function CvTemplateViewer({ data, template, onUpdateHeader }: { data: ParsedCV, template: TemplateType, onUpdateHeader?: (newName: string, newContact: string[]) => void }) {
   if (template === "minimalist") {
-     return <TemplateMinimalist data={data} />;
+     return <TemplateMinimalist data={data} onUpdateHeader={onUpdateHeader} />;
   }
   if (template === "integration") {
-     return <TemplateIntegration data={data} />;
+     return <TemplateIntegration data={data} onUpdateHeader={onUpdateHeader} />;
   }
-  return <TemplateModern data={data} />;
+  return <TemplateModern data={data} onUpdateHeader={onUpdateHeader} />;
 }

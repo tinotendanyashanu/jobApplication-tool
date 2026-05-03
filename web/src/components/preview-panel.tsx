@@ -26,6 +26,7 @@ export type PreviewPanelProps = {
   variant?: "cv" | "letter";
   onApply?: () => void;
   applying?: boolean;
+  onChangeText?: (text: string) => void;
 };
 
 export function PreviewPanel({
@@ -38,6 +39,7 @@ export function PreviewPanel({
   variant = "cv",
   onApply,
   applying,
+  onChangeText,
 }: PreviewPanelProps) {
   const [copying, setCopying] = useState(false);
   const [template, setTemplate] = useState<TemplateType>("integration");
@@ -82,6 +84,37 @@ export function PreviewPanel({
         downloadPlainTextPdf(title, safeBody, `${filenameBase}.pdf`);
       });
     }
+  }
+
+  function handleUpdateHeader(newName: string, newContact: string[]) {
+    if (!safeBody || !onChangeText) return;
+
+    const lines = safeBody.split("\n");
+    let h1Index = -1;
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].trim().startsWith("# ")) {
+        h1Index = i;
+        break;
+      }
+    }
+
+    let newLines = [...lines];
+    if (h1Index !== -1) {
+      newLines[h1Index] = `# ${newName}`;
+      let contactIndex = h1Index + 1;
+      while (contactIndex < newLines.length && newLines[contactIndex].trim().length === 0) {
+        contactIndex++;
+      }
+      if (contactIndex < newLines.length && !newLines[contactIndex].trim().startsWith("#")) {
+        newLines[contactIndex] = newContact.join(" | ");
+      } else {
+        newLines.splice(h1Index + 1, 0, newContact.join(" | "));
+      }
+    } else {
+      newLines = [`# ${newName}`, newContact.join(" | "), "", ...newLines];
+    }
+
+    onChangeText(newLines.join("\n"));
   }
 
   return (
@@ -185,7 +218,7 @@ export function PreviewPanel({
           ) : hasContent ? (
             <div className="pt-6" ref={printRef}>
               {isCv ? (
-                <CvTemplateViewer data={parsedData} template={template} />
+                <CvTemplateViewer data={parsedData} template={template} onUpdateHeader={onChangeText ? handleUpdateHeader : undefined} />
               ) : (
                 <LetterViewer text={safeBody} />
               )}

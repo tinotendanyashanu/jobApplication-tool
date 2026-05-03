@@ -25,6 +25,7 @@ export type OutputTabsProps = {
   locale: LocaleCode;
   onApply?: () => void;
   applying?: boolean;
+  onChangeCvText?: (text: string) => void;
 };
 
 export function OutputTabs({
@@ -36,6 +37,7 @@ export function OutputTabs({
   locale,
   onApply,
   applying,
+  onChangeCvText,
 }: OutputTabsProps) {
   const label = sanitizeForFile(candidateName);
   const cvSlug = `${label || "candidate"}-${locale}-cv`;
@@ -77,6 +79,7 @@ export function OutputTabs({
               fileStem={cvSlug}
               onApply={onApply}
               applying={applying}
+              onChangeText={onChangeCvText}
             />
           </TabsContent>
           <TabsContent

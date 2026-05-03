@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ParsedCV } from "@/lib/parse-cv";
-import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Globe, Edit2, Check, X } from "lucide-react";
+import { TemplateProps } from "./index";
 
 function ContactIcon({ value }: { value: string }) {
   if (value.includes("@")) return <Mail className="size-3 shrink-0" />;
@@ -19,20 +20,84 @@ function ContactLink({ value }: { value: string }) {
   return <span>{value}</span>;
 }
 
-export function TemplateModern({ data }: { data: ParsedCV }) {
+export function TemplateModern({ data, onUpdateHeader }: TemplateProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(data.header.name || "");
+  const [editContact, setEditContact] = useState(data.header.contact.join(" | "));
+
+  useEffect(() => {
+    setEditName(data.header.name || "");
+    setEditContact(data.header.contact.join(" | "));
+  }, [data.header]);
+
+  function handleSave() {
+    setIsEditing(false);
+    if (onUpdateHeader) {
+      onUpdateHeader(editName, editContact.split("|").map(s => s.trim()).filter(Boolean));
+    }
+  }
+
+  function handleCancel() {
+    setIsEditing(false);
+    setEditName(data.header.name || "");
+    setEditContact(data.header.contact.join(" | "));
+  }
+
   return (
     <div className="w-full bg-white text-slate-800 font-sans shadow-lg mx-auto" style={{ aspectRatio: "1 / 1.414", minHeight: "800px" }}>
       {/* Header Area */}
-      <div className="bg-slate-900 text-slate-100 p-8 flex flex-col items-center text-center">
-        <h1 className="text-3xl font-bold tracking-tight uppercase text-white mb-2">{data.header.name || "YOUR NAME"}</h1>
-        <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-300">
-          {data.header.contact.map((c, i) => (
-            <span key={i} className="flex items-center gap-1">
-              <ContactIcon value={c} />
-              <ContactLink value={c} />
-            </span>
-          ))}
-        </div>
+      <div className="bg-slate-900 text-slate-100 p-8 flex flex-col items-center text-center relative group">
+        {onUpdateHeader && !isEditing && (
+          <button 
+            onClick={() => setIsEditing(true)}
+            className="absolute right-4 top-4 p-2 text-slate-400 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity rounded-md hover:bg-slate-800"
+            title="Edit header"
+          >
+            <Edit2 className="w-4 h-4" />
+          </button>
+        )}
+        
+        {isEditing ? (
+          <div className="space-y-3 bg-slate-800 p-4 rounded-xl shadow-lg border border-slate-700 w-full max-w-lg">
+            <div>
+              <label className="text-xs uppercase font-bold text-slate-400 mb-1 block text-left">Full Name</label>
+              <input 
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                className="w-full text-center text-3xl font-bold tracking-tight uppercase text-white bg-slate-900 border border-slate-600 rounded px-2 py-1 outline-none focus:border-teal-400"
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="text-xs uppercase font-bold text-slate-400 mb-1 block text-left">Contact Info (separated by |)</label>
+              <input 
+                value={editContact}
+                onChange={(e) => setEditContact(e.target.value)}
+                className="w-full text-center text-sm text-slate-300 bg-slate-900 border border-slate-600 rounded px-2 py-1.5 outline-none focus:border-teal-400"
+              />
+            </div>
+            <div className="flex justify-center gap-2 pt-2">
+              <button onClick={handleSave} className="flex items-center gap-1 text-xs bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded font-medium transition-colors">
+                <Check className="w-3 h-3" /> Save
+              </button>
+              <button onClick={handleCancel} className="flex items-center gap-1 text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 px-4 py-2 rounded font-medium transition-colors">
+                <X className="w-3 h-3" /> Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <h1 className="text-3xl font-bold tracking-tight uppercase text-white mb-2">{data.header.name || "YOUR NAME"}</h1>
+            <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-300">
+              {data.header.contact.map((c, i) => (
+                <span key={i} className="flex items-center gap-1">
+                  <ContactIcon value={c} />
+                  <ContactLink value={c} />
+                </span>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="grid grid-cols-3">

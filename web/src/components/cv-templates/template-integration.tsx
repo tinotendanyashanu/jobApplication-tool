@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ParsedCV } from "@/lib/parse-cv";
-import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Globe, Edit2, Check, X } from "lucide-react";
+import { TemplateProps } from "./index";
 
 function ContactIcon({ value }: { value: string }) {
   if (value.includes("@")) return <Mail className="size-3 shrink-0" />;
@@ -19,7 +20,29 @@ function ContactLink({ value }: { value: string }) {
   return <span>{value}</span>;
 }
 
-export function TemplateIntegration({ data }: { data: ParsedCV }) {
+export function TemplateIntegration({ data, onUpdateHeader }: TemplateProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(data.header.name || "");
+  const [editContact, setEditContact] = useState(data.header.contact.join(" | "));
+
+  useEffect(() => {
+    setEditName(data.header.name || "");
+    setEditContact(data.header.contact.join(" | "));
+  }, [data.header]);
+
+  function handleSave() {
+    setIsEditing(false);
+    if (onUpdateHeader) {
+      onUpdateHeader(editName, editContact.split("|").map(s => s.trim()).filter(Boolean));
+    }
+  }
+
+  function handleCancel() {
+    setIsEditing(false);
+    setEditName(data.header.name || "");
+    setEditContact(data.header.contact.join(" | "));
+  }
+
   return (
     <>
       <style dangerouslySetInnerHTML={{__html: `
@@ -76,18 +99,60 @@ export function TemplateIntegration({ data }: { data: ParsedCV }) {
           {/* Left Column (Main) */}
           <div className="p-10 pr-8 bg-white/90 backdrop-blur-sm h-full flex flex-col gap-6">
             
-            <header className="mb-2">
-              <h1 className="text-[2.5rem] font-bold tracking-tight text-slate-800 leading-none mb-4 uppercase">
-                {data.header.name || "YOUR NAME"}
-              </h1>
-              <div className="flex flex-col gap-2 text-[13px] text-slate-600 font-medium font-['Public_Sans']">
-                {data.header.contact.map((c, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <span className="text-teal-600"><ContactIcon value={c} /></span>
-                    <ContactLink value={c} />
+            <header className="mb-2 relative group">
+              {onUpdateHeader && !isEditing && (
+                <button 
+                  onClick={() => setIsEditing(true)}
+                  className="absolute -left-8 top-2 p-1.5 text-slate-400 hover:text-teal-600 opacity-0 group-hover:opacity-100 transition-opacity rounded-md hover:bg-teal-50"
+                  title="Edit header"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+              )}
+              
+              {isEditing ? (
+                <div className="space-y-3 bg-white p-4 -ml-4 rounded-xl shadow-sm border border-teal-100">
+                  <div>
+                    <label className="text-[10px] uppercase font-bold text-slate-400 mb-1 block">Full Name</label>
+                    <input 
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="w-full text-[2rem] font-bold tracking-tight text-slate-800 leading-none uppercase bg-slate-50 border border-slate-200 rounded px-2 py-1 outline-none focus:border-teal-400"
+                      autoFocus
+                    />
                   </div>
-                ))}
-              </div>
+                  <div>
+                    <label className="text-[10px] uppercase font-bold text-slate-400 mb-1 block">Contact Info (separated by |)</label>
+                    <input 
+                      value={editContact}
+                      onChange={(e) => setEditContact(e.target.value)}
+                      className="w-full text-[13px] text-slate-600 font-medium font-['Public_Sans'] bg-slate-50 border border-slate-200 rounded px-2 py-1.5 outline-none focus:border-teal-400"
+                    />
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <button onClick={handleSave} className="flex items-center gap-1 text-xs bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded font-medium transition-colors">
+                      <Check className="w-3 h-3" /> Save
+                    </button>
+                    <button onClick={handleCancel} className="flex items-center gap-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded font-medium transition-colors">
+                      <X className="w-3 h-3" /> Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h1 className="text-[2.5rem] font-bold tracking-tight text-slate-800 leading-none mb-4 uppercase">
+                    {data.header.name || "YOUR NAME"}
+                  </h1>
+                  <div className="flex flex-col gap-2 text-[13px] text-slate-600 font-medium font-['Public_Sans']">
+                    {data.header.contact.map((c, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <span className="text-teal-600"><ContactIcon value={c} /></span>
+                        <ContactLink value={c} />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </header>
 
             {data.summary && (
