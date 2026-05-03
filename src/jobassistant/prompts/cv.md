@@ -21,7 +21,8 @@ They define HOW the CV looks, not what it says.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 STEP 2 — DATA EXTRACTION  (CV_KNOWLEDGE_BASE + PROFILE_JSON)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CV_KNOWLEDGE_BASE contains previous CVs. They are raw material — extract from them:
+You MUST carefully read and analyze ALL documents provided in the CV_KNOWLEDGE_BASE. Do not skip or ignore any provided CV.
+These documents are your raw material. Extract the following from ALL of them:
   • Contact information: name, email, phone, location, and any links (LinkedIn, GitHub, portfolio)
   • Skills and technologies (technical and soft)
   • Work experience: titles, companies, dates, responsibilities, achievements
@@ -29,7 +30,7 @@ CV_KNOWLEDGE_BASE contains previous CVs. They are raw material — extract from 
   • Metrics and quantifiable outcomes
 
 Then supplement with PROFILE_JSON for any detail not covered by the knowledge base.
-Merge everything into one unified profile. Remove duplicates. Standardise formatting.
+Merge everything into one unified, comprehensive profile. Resolve conflicts, remove duplicates, and standardise formatting.
 Never fabricate any fact not present in these two sources.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -41,17 +42,20 @@ From JOB_ANALYSIS_JSON build:
   • Experience-level expectations
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-STEP 4 — RELEVANCE FILTERING
+STEP 4 — RELEVANCE FILTERING & SYNTHESIS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-From the unified profile, select ONLY:
-  ✓ Skills that map to job requirements
-  ✓ Experience entries that overlap with job responsibilities
-  ✓ Projects that align with required technologies
+From your unified profile, construct a chronological work history. 
+Your goal is to tailor the CV for the job while preserving the candidate's core career timeline.
 
-Exclude:
-  ✗ Irrelevant job roles
-  ✗ Unrelated skills or tools
-  ✗ Generic filler content
+DO:
+  ✓ Include all major recent work experience to avoid unexplained employment gaps.
+  ✓ Adapt and rewrite bullet points for each role to highlight transferable skills, relevant achievements, and overlap with job responsibilities.
+  ✓ Select projects that specifically align with the required technologies.
+  ✓ Filter the skills section to heavily prioritize the ATS keywords and required skills.
+
+DO NOT:
+  ✗ Do NOT delete or exclude entire recent job roles just because they seem less relevant. Instead, minimize their footprint (e.g., fewer bullets) and focus on transferable skills (leadership, communication, problem-solving).
+  ✗ Do NOT include unrelated technical skills or generic filler content.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 STEP 5 — CV RECONSTRUCTION RULES
