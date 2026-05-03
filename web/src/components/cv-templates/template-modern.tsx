@@ -23,24 +23,24 @@ function ContactLink({ value }: { value: string }) {
 export function TemplateModern({ data, onUpdateHeader }: TemplateProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(data.header.name || "");
-  const [editContact, setEditContact] = useState(data.header.contact.join(" | "));
+  const [editContacts, setEditContacts] = useState(data.header.contact);
 
   useEffect(() => {
     setEditName(data.header.name || "");
-    setEditContact(data.header.contact.join(" | "));
+    setEditContacts(data.header.contact);
   }, [data.header]);
 
   function handleSave() {
     setIsEditing(false);
     if (onUpdateHeader) {
-      onUpdateHeader(editName, editContact.split("|").map(s => s.trim()).filter(Boolean));
+      onUpdateHeader(editName, editContacts.map(s => s.trim()).filter(Boolean));
     }
   }
 
   function handleCancel() {
     setIsEditing(false);
     setEditName(data.header.name || "");
-    setEditContact(data.header.contact.join(" | "));
+    setEditContacts(data.header.contact);
   }
 
   return (
@@ -69,12 +69,35 @@ export function TemplateModern({ data, onUpdateHeader }: TemplateProps) {
               />
             </div>
             <div>
-              <label className="text-xs uppercase font-bold text-slate-400 mb-1 block text-left">Contact Info (separated by |)</label>
-              <input 
-                value={editContact}
-                onChange={(e) => setEditContact(e.target.value)}
-                className="w-full text-center text-sm text-slate-300 bg-slate-900 border border-slate-600 rounded px-2 py-1.5 outline-none focus:border-teal-400"
-              />
+              <label className="text-xs uppercase font-bold text-slate-400 mb-1 block text-left">Contact Info</label>
+              <div className="space-y-2">
+                {editContacts.map((contact, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <input 
+                      value={contact}
+                      onChange={(e) => {
+                        const newContacts = [...editContacts];
+                        newContacts[idx] = e.target.value;
+                        setEditContacts(newContacts);
+                      }}
+                      className="flex-1 text-center text-sm text-slate-300 bg-slate-900 border border-slate-600 rounded px-2 py-1.5 outline-none focus:border-teal-400"
+                    />
+                    <button 
+                      onClick={() => setEditContacts(editContacts.filter((_, i) => i !== idx))}
+                      className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded"
+                      title="Remove"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+                <button 
+                  onClick={() => setEditContacts([...editContacts, ""])}
+                  className="text-xs font-semibold text-teal-500 hover:text-teal-400 uppercase tracking-wider flex items-center gap-1 mx-auto"
+                >
+                  + Add Detail
+                </button>
+              </div>
             </div>
             <div className="flex justify-center gap-2 pt-2">
               <button onClick={handleSave} className="flex items-center gap-1 text-xs bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded font-medium transition-colors">

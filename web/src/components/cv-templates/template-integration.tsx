@@ -23,24 +23,24 @@ function ContactLink({ value }: { value: string }) {
 export function TemplateIntegration({ data, onUpdateHeader }: TemplateProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(data.header.name || "");
-  const [editContact, setEditContact] = useState(data.header.contact.join(" | "));
+  const [editContacts, setEditContacts] = useState(data.header.contact);
 
   useEffect(() => {
     setEditName(data.header.name || "");
-    setEditContact(data.header.contact.join(" | "));
+    setEditContacts(data.header.contact);
   }, [data.header]);
 
   function handleSave() {
     setIsEditing(false);
     if (onUpdateHeader) {
-      onUpdateHeader(editName, editContact.split("|").map(s => s.trim()).filter(Boolean));
+      onUpdateHeader(editName, editContacts.map(s => s.trim()).filter(Boolean));
     }
   }
 
   function handleCancel() {
     setIsEditing(false);
     setEditName(data.header.name || "");
-    setEditContact(data.header.contact.join(" | "));
+    setEditContacts(data.header.contact);
   }
 
   return (
@@ -122,12 +122,35 @@ export function TemplateIntegration({ data, onUpdateHeader }: TemplateProps) {
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase font-bold text-slate-400 mb-1 block">Contact Info (separated by |)</label>
-                    <input 
-                      value={editContact}
-                      onChange={(e) => setEditContact(e.target.value)}
-                      className="w-full text-[13px] text-slate-600 font-medium font-['Public_Sans'] bg-slate-50 border border-slate-200 rounded px-2 py-1.5 outline-none focus:border-teal-400"
-                    />
+                    <label className="text-[10px] uppercase font-bold text-slate-400 mb-1 block">Contact Info</label>
+                    <div className="space-y-2">
+                      {editContacts.map((contact, idx) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <input 
+                            value={contact}
+                            onChange={(e) => {
+                              const newContacts = [...editContacts];
+                              newContacts[idx] = e.target.value;
+                              setEditContacts(newContacts);
+                            }}
+                            className="flex-1 text-[13px] text-slate-600 font-medium font-['Public_Sans'] bg-slate-50 border border-slate-200 rounded px-2 py-1.5 outline-none focus:border-teal-400"
+                          />
+                          <button 
+                            onClick={() => setEditContacts(editContacts.filter((_, i) => i !== idx))}
+                            className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded"
+                            title="Remove"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
+                      <button 
+                        onClick={() => setEditContacts([...editContacts, ""])}
+                        className="text-[11px] font-semibold text-teal-600 hover:text-teal-700 uppercase tracking-wider flex items-center gap-1"
+                      >
+                        + Add Detail
+                      </button>
+                    </div>
                   </div>
                   <div className="flex gap-2 pt-2">
                     <button onClick={handleSave} className="flex items-center gap-1 text-xs bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded font-medium transition-colors">
