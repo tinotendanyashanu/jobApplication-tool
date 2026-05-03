@@ -91,7 +91,7 @@ export function TemplateIntegration({ data }: { data: ParsedCV }) {
             </header>
 
             {data.summary && (
-              <section>
+              <section className="break-inside-avoid">
                 <h2 className="text-[15px] font-bold text-slate-800 border-b-2 border-teal-500/30 pb-1 mb-3 uppercase tracking-wider">Summary</h2>
                 <p className="text-[13px] leading-[1.6] text-slate-700 text-justify">{data.summary}</p>
               </section>
@@ -102,7 +102,7 @@ export function TemplateIntegration({ data }: { data: ParsedCV }) {
                 <h2 className="text-[15px] font-bold text-slate-800 border-b-2 border-teal-500/30 pb-1 mb-4 uppercase tracking-wider">Work Experience</h2>
                 <div className="space-y-5">
                   {data.experience.map((exp, i) => (
-                    <div key={i}>
+                    <div key={i} className="break-inside-avoid">
                       <div className="flex justify-between items-baseline mb-0.5">
                         <h3 className="font-semibold text-slate-800 text-[14px]">{exp.title}</h3>
                         <span className="text-[11px] text-teal-700 font-semibold uppercase tracking-wide whitespace-nowrap ml-4">{exp.date}</span>
@@ -128,7 +128,7 @@ export function TemplateIntegration({ data }: { data: ParsedCV }) {
                 <h2 className="text-[15px] font-bold text-slate-800 border-b-2 border-slate-300 pb-1 mb-4 uppercase tracking-wider">Education</h2>
                 <div className="space-y-4">
                   {data.education.map((edu, i) => (
-                    <div key={i}>
+                    <div key={i} className="break-inside-avoid">
                       <h3 className="font-semibold text-slate-800 text-[13px] leading-tight mb-1">{edu.degree}</h3>
                       <div className="text-[12px] text-slate-600 mb-1">{edu.institution}</div>
                       <div className="text-[11px] text-slate-500 font-medium uppercase tracking-wide">{edu.date}</div>
@@ -144,7 +144,7 @@ export function TemplateIntegration({ data }: { data: ParsedCV }) {
                 <h2 className="text-[15px] font-bold text-slate-800 border-b-2 border-slate-300 pb-1 mb-4 uppercase tracking-wider">Skills</h2>
                 <div className="space-y-4">
                   {data.skills.map((skillGroup, i) => (
-                    <div key={i}>
+                    <div key={i} className="break-inside-avoid">
                       <h3 className="text-[12px] font-semibold text-slate-800 mb-1.5">{skillGroup.category}</h3>
                       <div className="flex flex-col gap-1 text-[12px] text-slate-600 leading-snug">
                         {skillGroup.items.join(" • ")}
@@ -160,7 +160,7 @@ export function TemplateIntegration({ data }: { data: ParsedCV }) {
                 <h2 className="text-[15px] font-bold text-slate-800 border-b-2 border-slate-300 pb-1 mb-4 uppercase tracking-wider">Projects</h2>
                 <div className="space-y-4">
                   {data.projects.map((proj, i) => (
-                    <div key={i}>
+                    <div key={i} className="break-inside-avoid">
                       <h3 className="font-semibold text-slate-800 text-[13px] mb-1">{proj.name}</h3>
                       {proj.details && <p className="text-[11.5px] text-slate-500 mb-1.5 italic">{proj.details}</p>}
                       <ul className="list-disc list-outside ml-3.5 space-y-1 text-[11.5px] text-slate-600">

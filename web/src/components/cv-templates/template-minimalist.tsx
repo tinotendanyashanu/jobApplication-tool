@@ -29,7 +29,7 @@ export function TemplateMinimalist({ data }: { data: ParsedCV }) {
 
       <div className="space-y-6">
         {data.summary && (
-          <section>
+          <section className="break-inside-avoid">
             <p className="text-sm leading-relaxed text-gray-700 text-justify">{data.summary}</p>
           </section>
         )}
@@ -39,7 +39,7 @@ export function TemplateMinimalist({ data }: { data: ParsedCV }) {
             <h2 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-1 mb-3 uppercase tracking-widest">Experience</h2>
             <div className="space-y-4">
               {data.experience.map((exp, i) => (
-                <div key={i}>
+                <div key={i} className="break-inside-avoid">
                   <div className="flex justify-between items-baseline mb-0.5">
                     <h3 className="font-semibold text-gray-800 text-sm">{exp.title}</h3>
                     <span className="text-xs text-gray-500">{exp.date}</span>
@@ -61,7 +61,7 @@ export function TemplateMinimalist({ data }: { data: ParsedCV }) {
             <h2 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-1 mb-3 uppercase tracking-widest">Education</h2>
             <div className="space-y-3">
               {data.education.map((edu, i) => (
-                <div key={i} className="flex justify-between items-baseline">
+                <div key={i} className="flex justify-between items-baseline break-inside-avoid">
                   <div>
                     <h3 className="font-semibold text-gray-800 text-sm">{edu.degree}</h3>
                     <div className="text-xs text-gray-600">{edu.institution} {edu.details && `- ${edu.details}`}</div>
@@ -78,7 +78,7 @@ export function TemplateMinimalist({ data }: { data: ParsedCV }) {
             <h2 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-1 mb-3 uppercase tracking-widest">Skills</h2>
             <div className="space-y-2">
               {data.skills.map((skillGroup, i) => (
-                <div key={i} className="text-sm">
+                <div key={i} className="text-sm break-inside-avoid">
                   <span className="font-semibold text-gray-800 mr-2">{skillGroup.category}:</span>
                   <span className="text-gray-700">{skillGroup.items.join(", ")}</span>
                 </div>
@@ -92,7 +92,7 @@ export function TemplateMinimalist({ data }: { data: ParsedCV }) {
               <h2 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-1 mb-3 uppercase tracking-widest">Projects</h2>
               <div className="space-y-4">
                 {data.projects.map((proj, i) => (
-                  <div key={i}>
+                  <div key={i} className="break-inside-avoid">
                     <div className="flex items-baseline gap-2 mb-1">
                        <h3 className="font-semibold text-gray-800 text-sm">{proj.name}</h3>
                     </div>

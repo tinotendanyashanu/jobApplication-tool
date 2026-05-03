@@ -39,7 +39,7 @@ export function TemplateModern({ data }: { data: ParsedCV }) {
         {/* Main Body */}
         <div className="col-span-2 p-8 space-y-6">
           {data.summary && (
-            <section>
+            <section className="break-inside-avoid">
               <h2 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-1 mb-3 uppercase tracking-widest">Summary</h2>
               <p className="text-sm leading-relaxed text-slate-600">{data.summary}</p>
             </section>
@@ -50,7 +50,7 @@ export function TemplateModern({ data }: { data: ParsedCV }) {
               <h2 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-1 mb-3 uppercase tracking-widest">Experience</h2>
               <div className="space-y-4">
                 {data.experience.map((exp, i) => (
-                  <div key={i}>
+                  <div key={i} className="break-inside-avoid">
                     <div className="flex justify-between items-baseline mb-1">
                       <h3 className="font-semibold text-slate-800 text-sm">{exp.title}</h3>
                       <span className="text-xs text-slate-500 font-medium">{exp.date}</span>
@@ -72,7 +72,7 @@ export function TemplateModern({ data }: { data: ParsedCV }) {
               <h2 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-1 mb-3 uppercase tracking-widest">Education</h2>
               <div className="space-y-3">
                 {data.education.map((edu, i) => (
-                  <div key={i}>
+                  <div key={i} className="break-inside-avoid">
                     <div className="flex justify-between items-baseline">
                       <h3 className="font-semibold text-slate-800 text-sm">{edu.degree}</h3>
                       <span className="text-xs text-slate-500">{edu.date}</span>
@@ -90,7 +90,7 @@ export function TemplateModern({ data }: { data: ParsedCV }) {
               <h2 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-1 mb-3 uppercase tracking-widest">Projects</h2>
               <div className="space-y-3">
                 {data.projects.map((proj, i) => (
-                  <div key={i}>
+                  <div key={i} className="break-inside-avoid">
                     <h3 className="font-semibold text-slate-800 text-sm mb-1">{proj.name}</h3>
                     {proj.details && <p className="text-xs text-slate-600 mb-1">{proj.details}</p>}
                     <ul className="list-disc list-outside ml-4 space-y-1 text-sm text-slate-600">
@@ -112,7 +112,7 @@ export function TemplateModern({ data }: { data: ParsedCV }) {
               <h2 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-1 mb-3 uppercase tracking-widest">Skills</h2>
               <div className="space-y-4">
                 {data.skills.map((skillGroup, i) => (
-                  <div key={i}>
+                  <div key={i} className="break-inside-avoid">
                     <h3 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">{skillGroup.category}</h3>
                     <div className="flex flex-wrap gap-1.5">
                       {skillGroup.items.map((item, j) => (
